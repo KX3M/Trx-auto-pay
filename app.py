@@ -8,14 +8,14 @@ app = Flask(__name__)
 client = Tron()  # For mainnet
 # client = Tron(network="shasta")  # For testnet
 
-ADMIN_ADDRESS = "TVwXueNC13YUwTJnRvfK9An1cF39Q1af8Q"
+ADMIN_ADDRESS = "TVwXueNC13YUwTJnRvfK9An1cF39Q1af8Q"  # 🛠️ Replace with your TRX wallet
 ADMIN_FEE_PERCENT = 2
 
 @app.route("/")
 def home():
-    return "✅ TRON API is live on Vercel"
+    return "✅ TRON AutoPay API is LIVE (Koyeb)"
 
-@app.route("/wallet", methods=["GET"])
+@app.route("/wallet")
 def generate_wallet():
     hex_key = secrets.token_hex(32)
     priv_key = PrivateKey(bytes.fromhex(hex_key))
@@ -25,8 +25,8 @@ def generate_wallet():
         "private_key": priv_key.hex()
     })
 
-@app.route("/balance/<address>", methods=["GET"])
-def get_balance(address):
+@app.route("/balance/<address>")
+def balance(address):
     try:
         acc = client.get_account(address)
         balance = acc.get("balance", 0) / 1_000_000
@@ -34,7 +34,7 @@ def get_balance(address):
     except Exception as e:
         return jsonify({"error": str(e)})
 
-@app.route("/pay/<private_key>/<to_address>/<amount>", methods=["GET"])
+@app.route("/pay/<private_key>/<to_address>/<amount>")
 def pay(private_key, to_address, amount):
     try:
         pk = PrivateKey(bytes.fromhex(private_key.replace("0x", "")))
@@ -78,12 +78,11 @@ def pay(private_key, to_address, amount):
     except Exception as e:
         return jsonify({"error": str(e)})
 
-@app.route("/history/<address>", methods=["GET"])
+@app.route("/history/<address>")
 def history(address):
     return jsonify({
         "tronscan": f"https://tronscan.org/#/address/{address}"
     })
 
-# Required for Vercel Python
-def handler(event, context):
-    return app(event, context)
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=8080)
