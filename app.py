@@ -5,8 +5,8 @@ import secrets
 
 app = Flask(__name__)
 
-client = Tron()  # For mainnet
-# client = Tron(network="shasta")  # For testnet
+client = Tron(api_key="a6cd9888-4efd-4339-8078-0997ddd35a18")
+
 
 ADMIN_ADDRESS = "TVwXueNC13YUwTJnRvfK9An1cF39Q1af8Q"  # 🛠️ Replace with your TRX wallet
 ADMIN_FEE_PERCENT = 2
